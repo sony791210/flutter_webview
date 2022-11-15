@@ -6,19 +6,21 @@ import 'package:localstorage/localstorage.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 
-class LoginScreen extends StatefulWidget {
+// class LoginScreen extends StatefulWidget {
+//
+//   @override
+//   State<LoginScreen> createState() {
+//     return new _LoginScreenState();
+//   }
+// }
 
-  @override
-  State<LoginScreen> createState() {
-    return new _LoginScreenState();
-  }
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-
+class LoginScreen extends HookWidget {
+  final LocalStorage storage = new LocalStorage('brick-game');
   Future<String> getItems() async {
-    final LocalStorage storage = new LocalStorage('brick-game');
-    final data  = await storage.getItem('data');
+    // final LocalStorage storage = new LocalStorage('brick-game');
+    // storage.setItem('token', 'Abolfazl');
+    final data  = await storage.getItem('token');
+    print(data);
     return data;
   }
 
@@ -215,6 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       Login login = Login.fromJson(response.data);
       print(login.accesstoken);
+
       return login;
     } catch (e) {
       print(e);
@@ -223,7 +226,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
+    useEffect(() {
+      Future.microtask(()async {
+        print("1235");
+        final token=await getItems();
+        if(token.isNotEmpty){
+          Navigator.pushNamed(context, '/Home');
+        }
+      });
+    }, const []);
     Widget loginButton = new Container(
         margin: const EdgeInsets.only(left: 35, right: 35),
         //这个widget距离父控件左右35（还有个all就是距离左上右下四个方向）
@@ -242,7 +253,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 Login? login = await _getUserInfo(
                     _accountController.text, _passwordController.text);
                 if (login!.code == "0000") {
+                  storage.setItem("token", login!.accesstoken);
                   Navigator.pushNamed(context, '/Home');
+
                 } else {
                   showDialog<void>(
                     context: context,
