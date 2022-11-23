@@ -19,7 +19,7 @@ class WebviewScreen  extends HookWidget {
     try {
       print("_getUrl");
       Response response = await Dio().post(
-        'https://636774b3f5f549f052d5af8c.mockapi.io/api/token',
+        'https://test.k8s.maev02.com/api/token',
         data: {
           'token': token,
         },
@@ -82,7 +82,7 @@ class WebviewScreen  extends HookWidget {
 
     return MaterialApp(
 
-
+        debugShowCheckedModeBanner: false,
         home:Scaffold(
           // appBar: AppBar(
           //   title: Text(

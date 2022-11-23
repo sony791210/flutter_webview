@@ -13,9 +13,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp
     (
-        title: 'Flutter Demo',
-    theme: new ThemeData(
-    primarySwatch: Colors.blue,
+        debugShowCheckedModeBanner: false,
+        title: 'Qlinx智慧雲霧平台',
+        theme: new ThemeData(
+        primarySwatch: Colors.blue,
     ),
 
       routes: {
