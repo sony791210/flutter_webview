@@ -4,15 +4,24 @@ import 'package:localstorage/localstorage.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:demo/model/tokenModel.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class WebviewScreen  extends HookWidget {
 
   final LocalStorage storage = new LocalStorage('brick-game');
+
   Future<String> getItems() async {
-    // final LocalStorage storage = new LocalStorage('brick-game');
-    final data  = await storage.getItem('token');
+    final prefs = await SharedPreferences.getInstance();
+    final String? data = prefs.getString('token');
     print(data);
-    return data;
+    return data ?? "";
+  }
+
+  Future<void> deleteItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Save an String value to 'action' key.
+    await prefs.remove('token');
   }
 
   Future<TokenModel?> _getUrl(String token) async {
@@ -37,6 +46,10 @@ class WebviewScreen  extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    //強制改成android
+    // WebView.platform=AndroidWebView();
+
+    final _isLoading= useState(true);
     Future<String> fetchData() async {
       final token=await getItems();
       final tokenModel =await _getUrl(token);
@@ -44,12 +57,13 @@ class WebviewScreen  extends HookWidget {
         print("gogogog");
         return tokenModel!.url ?? "";
       }else{
-        await storage.deleteItem("token");
+        await deleteItems();
         Navigator.pushNamed(context, '/');
       }
 
       await Future.delayed(Duration(seconds: 5));
       return 'ehe';
+
     }
 
     final selectedUrl = useState("");
@@ -58,7 +72,6 @@ class WebviewScreen  extends HookWidget {
 
     useEffect(() {
       Future.microtask(()async {
-        print("34567");
         final token=await getItems();
         if(token.isEmpty){
           Navigator.pushNamed(context, '/');
@@ -93,12 +106,29 @@ class WebviewScreen  extends HookWidget {
         body: Container(
           child:  SafeArea(
             child:  snapshot.hasData?
-            WebView(
-              initialUrl:  snapshot.data.toString(),
-              javascriptMode: JavascriptMode.unrestricted,
-            )
+
+                Stack(
+                  children: [
+
+                    // if(_isLoading.value) Center(child:CircularProgressIndicator() ,),
+                    WebView(
+                      initialUrl:  snapshot.data.toString(),
+                      javascriptMode: JavascriptMode.unrestricted,
+                      onPageFinished: (str) async{
+                       print("done loading");
+                        _isLoading.value = false;
+                      },
+                      onPageStarted: (str)async {
+                        print("start");
+                        _isLoading.value = true;
+
+                      },
+                    ),
+                    if(_isLoading.value) Center(child:Image.asset('assets/gif/test.gif') ,),
+                  ],
+                )
             :Center(
-                child:CircularProgressIndicator()
+                child:Image.asset('assets/gif/test.gif')
             )
           ),
         ),

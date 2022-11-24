@@ -33,6 +33,11 @@ dependencies:
   dio: ^4.0.6
   localstorage: ^4.0.0+1
   flutter_hooks: ^0.18.5+1
+  shared_preferences: ^2.0.15
+  firebase_core: ^2.3.0
+  firebase_messaging: ^14.1.1
+  flutter_local_notifications: ^12.0.4
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -55,9 +60,20 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  fonts:
+    - family: NotoSansTC   #這裡填字體家族名稱
+      fonts:
+        - asset: fonts/Noto_Sans_TC/NotoSansTC-Black.otf
+        - asset: fonts/Noto_Sans_TC/NotoSansTC-Bold.otf
+        - asset: fonts/Noto_Sans_TC/NotoSansTC-Light.otf
+        - asset: fonts/Noto_Sans_TC/NotoSansTC-Medium.otf
+        - asset: fonts/Noto_Sans_TC/NotoSansTC-Regular.otf
+        - asset: fonts/Noto_Sans_TC/NotoSansTC-Thin.otf
+
   assets:
     - assets/images/login_sea.jpeg
     - assets/images/White_Logo.png
+    - assets/gif/test.gif
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_app/screen/LoginScreen.dart';
 import "controller/login.dart";
 import "controller/webview.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() async{
+  SharedPreferences.setMockInitialValues({});
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
