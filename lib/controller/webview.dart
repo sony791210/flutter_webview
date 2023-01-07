@@ -14,19 +14,24 @@ class WebviewScreen  extends HookWidget {
   Future<String> getItems() async {
     final prefs = await SharedPreferences.getInstance();
     final String? data = prefs.getString('token');
+    print("data");
     print(data);
     return data ?? "";
   }
 
   Future<void> deleteItems() async {
+    print('GOGO');
     final prefs = await SharedPreferences.getInstance();
     // Save an String value to 'action' key.
     await prefs.remove('token');
+    print("down");
   }
 
   Future<TokenModel?> _getUrl(String token) async {
     try {
       print("_getUrl");
+      print("QQQQQ");
+      print(token);
       Response response = await Dio().post(
         'https://test.k8s.maev02.com/api/token',
         data: {
@@ -61,7 +66,7 @@ class WebviewScreen  extends HookWidget {
         Navigator.pushNamed(context, '/');
       }
 
-      await Future.delayed(Duration(seconds: 5));
+      // await Future.delayed(Duration(seconds: 5));
       return 'ehe';
 
     }
@@ -98,10 +103,20 @@ class WebviewScreen  extends HookWidget {
         debugShowCheckedModeBanner: false,
         home:Scaffold(
           // appBar: AppBar(
-          //   title: Text(
-          //       snapshot.data.toString()
-          //
-          //   ),
+          //   title:Center(
+          //     child:  TextButton(
+          //         child: Text('返回'),
+          //         onPressed: ()async {
+          //             await deleteItems();
+          //            Future.delayed(Duration.zero,(){
+          //              Navigator.of(context).pop();
+          //            });
+          //           },
+          //         style: ButtonStyle(
+          //           backgroundColor: MaterialStateProperty.all(Colors.black),
+          //         )
+          //     ),
+          //   )
           // ),
         body: Container(
           child:  SafeArea(

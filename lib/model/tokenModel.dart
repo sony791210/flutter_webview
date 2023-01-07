@@ -8,18 +8,22 @@ class TokenModel {
   TokenModel({
     this.code,
     this.url,
+    this.message,
   });
 
   String? code;
   String? url;
+  String? message;
 
   factory TokenModel.fromJson(Map<String, dynamic> json) => TokenModel(
     code: json["code"],
     url: json["url"],
+    message: json["message"],
   );
 
   Map<String, dynamic> toJson() => {
     "code": code,
     "url": url,
+    "message": message,
   };
 }

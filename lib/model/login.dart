@@ -10,23 +10,23 @@ String loginToJson(Login data) => json.encode(data.toJson());
 
 class Login {
   Login({
-     this.accesstoken,
+     this.token,
      this.message,
      this.code,
   });
 
-  String? accesstoken;
+  String? token;
   String? message;
   String? code;
 
   factory Login.fromJson(Map<String, dynamic> json) => Login(
-    accesstoken: json["accesstoken"],
+    token: json["token"],
     message: json["message"],
     code: json["code"],
   );
 
   Map<String, dynamic> toJson() => {
-    "accesstoken": accesstoken,
+    "token": token,
     "message": message,
     "code": code,
   };

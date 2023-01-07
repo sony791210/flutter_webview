@@ -5,6 +5,8 @@ import 'package:demo/model/login.dart';
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // class LoginScreen extends StatefulWidget {
 //
@@ -24,13 +26,7 @@ class LoginScreen extends HookWidget {
     return data;
   }
 
-  Future<void> saveItems(token) async {
-    print('save items');
-    final prefs = await SharedPreferences.getInstance();
-    // Save an String value to 'action' key.
-    await prefs.setString('token', token);
-    print('finish');
-  }
+
 
 //用于路由（就是界面的跳转），当跳转的事件没有写在build里面时用到（我这里抽到了loginButton里面）
 //   static BuildContext context1;
@@ -200,7 +196,7 @@ class LoginScreen extends HookWidget {
 
   //pandd
   Widget topContainer = new Container(
-    height: 150,
+    height: 100,
   );
 
   //Log
@@ -211,21 +207,22 @@ class LoginScreen extends HookWidget {
     ),
   );
 
-  Future<Login?> _getUserInfo(String account, String password) async {
+  Future<Login?> _getUserInfo(String account, String password,String deviceToken) async {
     try {
-      print("QQQQQ");
       print(account);
       print(password);
+      print(account);
       Response response = await Dio().post(
         'https://test.k8s.maev02.com/api/login',
         data: {
           'account': account,
           'password': password,
+          'deviceToken':deviceToken,
         },
       );
       print('okok');
       Login login = Login.fromJson(response.data);
-      print(login.accesstoken);
+      print(login.token);
 
       return login;
     } catch (e) {
@@ -235,18 +232,55 @@ class LoginScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _test=useState("QQ");
+    final _deviceToken=useState("");
     final _isObscureText=useState(true);
+    final future = useMemoized(SharedPreferences.getInstance);
+    final snapshot = useFuture(future, initialData: null);
+
+    // useEffect(() {
+    //   Future.microtask(() async {
+    //     print("1235");
+    //     print("QQQQQsss");
+    //     final token = await getItems();
+    //     if (token!=null && token!.isNotEmpty) {
+    //       Navigator.pushNamed(context, '/Home');
+    //     }
+    //   });
+    // }, const []);
 
     useEffect(() {
-      Future.microtask(() async {
-        print("1235");
-        final token = await getItems();
-        if (token!=null && token!.isNotEmpty) {
-          Navigator.pushNamed(context, '/Home');
-        }
-      });
-    }, const []);
+      final preferences = snapshot.data;
+      if (preferences == null) {
+        return;
+      }
+      final devicToken=preferences.getString('deviceToken');
+      _deviceToken.value=devicToken ?? "";
 
+
+      final token = preferences.getString('token');
+      if(token!=null && token!.isNotEmpty){
+        Navigator.pushNamed(context, '/Home');
+      }
+      _test.value=token??"PP";
+
+    }, [snapshot.data]);
+
+    Future<void> saveItems(token) async {
+      print('save items');
+      print(token);
+      final preferences = snapshot.data;
+      // Save an String value to 'action' key.
+      print("gogo");
+      if (preferences == null) {
+        return;
+      }
+
+      preferences.setString("token", token);
+      _test.value=token??"PP!";
+      // await prefs.setString('token', token);
+      print('finish');
+    }
 
     //帳號输入框样式
     Widget buildAccountTextFiedTest(TextEditingController controller) {
@@ -485,13 +519,12 @@ class LoginScreen extends HookWidget {
                 style: TextStyle(color: Colors.black, fontSize: 20,fontFamily: "NotoSansTC"),
               ),
               onPressed: () async {
-                print(_accountController.text);
-                print(_passwordController.text);
+                print("gogo");
                 Login? login = await _getUserInfo(
-                    _accountController.text, _passwordController.text);
+                    _accountController.text, _passwordController.text,_deviceToken.value);
 
                 if (login!.code == "0000") {
-                  await saveItems(login!.accesstoken);
+                  await saveItems(login!.token);
                   Navigator.pushNamed(context, '/Home');
                 } else {
                   showDialog<void>(
@@ -521,7 +554,7 @@ class LoginScreen extends HookWidget {
 
     return Scaffold(
         // appBar: new AppBar(
-        //   title: new Text('登入'),
+        //   title: new Text(_test.value),
         // ),
         body: Container(
       child: new ListView(
