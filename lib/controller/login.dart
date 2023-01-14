@@ -211,7 +211,8 @@ class LoginScreen extends HookWidget {
     try {
       print(account);
       print(password);
-      print(account);
+      print(deviceToken);
+      print('before dio');
       Response response = await Dio().post(
         'https://test.k8s.maev02.com/api/login',
         data: {
@@ -220,7 +221,9 @@ class LoginScreen extends HookWidget {
           'deviceToken':deviceToken,
         },
       );
+      print('done dio');
       print('okok');
+      print(response);
       Login login = Login.fromJson(response.data);
       print(login.token);
 

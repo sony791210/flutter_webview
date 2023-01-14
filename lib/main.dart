@@ -32,7 +32,7 @@ void main() async{
     }
   });
 // 虛假的要處理掉 使用模擬器開發用一下 清空一下快取
-//   SharedPreferences.setMockInitialValues({});
+  SharedPreferences.setMockInitialValues({});
   runApp(MyApp());
 }
 
