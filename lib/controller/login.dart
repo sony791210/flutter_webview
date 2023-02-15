@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import "package:demo/navigation/bottom.dart";
 // class LoginScreen extends StatefulWidget {
 //
 //   @override
@@ -263,7 +264,9 @@ class LoginScreen extends HookWidget {
 
       final token = preferences.getString('token');
       if(token!=null && token!.isNotEmpty){
-        Navigator.pushNamed(context, '/Home');
+        Future.delayed(Duration.zero,(){
+          Navigator.pushReplacementNamed(context, '/Self');
+        });
       }
       _test.value=token??"PP";
 
@@ -528,7 +531,7 @@ class LoginScreen extends HookWidget {
 
                 if (login!.code == "0000") {
                   await saveItems(login!.token);
-                  Navigator.pushNamed(context, '/Home');
+                  Navigator.pushReplacementNamed(context, '/Home');
                 } else {
                   showDialog<void>(
                     context: context,
@@ -560,16 +563,21 @@ class LoginScreen extends HookWidget {
         //   title: new Text(_test.value),
         // ),
         body: Container(
-      child: new ListView(
-          children: [topContainer, logo, textSection, loginButton]),
-      decoration: BoxDecoration(
-        // image: DecorationImage(
-        //   image: AssetImage('assets/images/login_sea.jpeg'),
-        //   fit:BoxFit.cover,
-        //   colorFilter: ColorFilter.mode(Colors.blue, BlendMode.darken),
-        // ),
-        color: Color(0xff354F6A),
-      ),
-    ));
+          child: new ListView(
+            children: [topContainer, logo, textSection, loginButton]
+          ),
+          decoration: BoxDecoration(
+            // image: DecorationImage(
+            //   image: AssetImage('assets/images/login_sea.jpeg'),
+            //   fit:BoxFit.cover,
+            //   colorFilter: ColorFilter.mode(Colors.blue, BlendMode.darken),
+            // ),
+            color: Color(0xff354F6A),
+          ),
+        ),
+        bottomNavigationBar:BottomMenu(
+          selectedIndex: 0,
+        ),
+    );
   }
 }

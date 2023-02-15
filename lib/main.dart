@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_app/screen/LoginScreen.dart';
 import "controller/login.dart";
 import "controller/webview.dart";
+import "controller/self.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -103,7 +104,7 @@ class _HomePageState extends State<MyApp> {
   Widget build(BuildContext context) {
     return new MaterialApp
     (
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         title: 'Qlinx智慧雲霧平台',
         theme: new ThemeData(
         primarySwatch: Colors.blue,
@@ -116,6 +117,7 @@ class _HomePageState extends State<MyApp> {
    */
       '/': (BuildContext context) => new LoginScreen(),
       '/Home': (BuildContext context) => new WebviewScreen(),
+      '/Self': (BuildContext context) => new SelfScreen(),
     },
     );
   }

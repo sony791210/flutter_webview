@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:demo/model/tokenModel.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import "package:demo/navigation/bottom.dart";
 
 
 class WebviewScreen  extends HookWidget {
@@ -63,7 +64,7 @@ class WebviewScreen  extends HookWidget {
         return tokenModel!.url ?? "";
       }else{
         await deleteItems();
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       }
 
       // await Future.delayed(Duration(seconds: 5));
@@ -79,7 +80,7 @@ class WebviewScreen  extends HookWidget {
       Future.microtask(()async {
         final token=await getItems();
         if(token.isEmpty){
-          Navigator.pushNamed(context, '/');
+          Navigator.pushReplacementNamed(context, '/');
         }
 
         // final tokenModel =await _getUrl(token);
@@ -98,10 +99,8 @@ class WebviewScreen  extends HookWidget {
       });
     }, const []);
 
-    return MaterialApp(
-
-        debugShowCheckedModeBanner: false,
-        home:Scaffold(
+    return
+        Scaffold(
           // appBar: AppBar(
           //   title:Center(
           //     child:  TextButton(
@@ -147,9 +146,9 @@ class WebviewScreen  extends HookWidget {
             )
           ),
         ),
-      )
-
-
-    );
+        bottomNavigationBar:BottomMenu(
+          selectedIndex: 1,
+        ),
+      );
   }
 }
